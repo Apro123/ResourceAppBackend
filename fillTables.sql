@@ -1,6 +1,6 @@
 -- Inserting data into Users
 INSERT INTO Users (u_firstname, u_lastname, u_username, u_pictureURL, u_schoolEmail, u_schoolID, u_password, u_genderTitle, u_professionalTitle, u_affiliatedProgramID, u_adminPriv, u_programPriv, u_lastLoggedIn, u_currentlyLoggedIPAddress, u_addedBy)
-VALUES 
+VALUES
     ('Victoria', 'Preece', 'user #1', NULL, 'vPreece@ucmerced.edu', '802789240', 'password1', NULL, NULL, NULL, 1, 1, NULL, NULL, NULL),
     ('Payton', 'Greaves', 'user #2', NULL, 'pGreaves@ucmerced.edu', '378502872', 'password2', NULL, NULL, NULL, 1, 1, NULL, NULL, NULL),
     ('Roisin', 'Tierney', 'user #3', NULL, 'rTierney@ucmerced.edu', '024567491', 'password3', NULL, NULL, NULL, 1, 1, NULL, NULL, NULL),
