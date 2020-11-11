@@ -4,12 +4,12 @@ VALUES
     ('Victoria', 'Preece', 'admin user #1', "https://loremflickr.com/640/360", 'vPreece@ucmerced.edu', '802789240', 'password1', "She/Her", "IT Administrator", NULL, 0, 0, NULL, NULL, NULL),
     ('Payton', 'Greaves', 'user #2', "https://loremflickr.com/640/360", 'pGreaves@ucmerced.edu', '378502872', 'password2', "She/Her", "Student", NULL, 0, 0, NULL, NULL, NULL),
     ('Roisin', 'Tierney', 'user #3', "https://loremflickr.com/640/360", 'rTierney@ucmerced.edu', '024567491', 'password3', "He/His/Him", "Student", NULL, 0, 0, NULL, NULL, NULL),
-    ('Keiren', 'Robin', 'user #4', "https://loremflickr.com/640/360", 'kRobin@ucmerced.edu', '456872035', 'password4', "He/His/Him", "Student", NULL, 0, 0, NULL, NULL, ),
+    ('Keiren', 'Robin', 'user #4', "https://loremflickr.com/640/360", 'kRobin@ucmerced.edu', '456872035', 'password4', "He/His/Him", "Student", NULL, 0, 0, NULL, NULL, NULL),
     ('Rose', 'Handley', 'program user #5', "https://loremflickr.com/640/360", 'rHandley@ucmerced.edu', '867542098', 'password5', "She/Her", "Program Intern", NULL, 0, 0, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'rHandley@ucmerced.edu', NULL, NULL, NULL, NULL, 1, 0, 1, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'rHandley@ucmerced.edu', NULL, NULL, NULL, NULL, 2, 0, 1, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'rHandley@ucmerced.edu', NULL, NULL, NULL, NULL, 3, 0, 1, NULL, NULL, 1),
-    ('Phoebe', 'Legge', 'user #6', "https://loremflickr.com/640/360", 'pLegge@ucmerced.edu', '324587601', 'password6', "She/Her", "Student", NULL, 0, 0, NULL, NULL, ),
+    ('Phoebe', 'Legge', 'user #6', "https://loremflickr.com/640/360", 'pLegge@ucmerced.edu', '324587601', 'password6', "She/Her", "Student", NULL, 0, 0, NULL, NULL, NULL),
     ('Asha', 'Bolton', 'program user #7', "https://loremflickr.com/640/360", 'aBolton@ucmerced.edu', '457822146', 'password7', "She/Her", "Program Intern", NULL, 0, 0, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'aBolton@ucmerced.edu', NULL, NULL, NULL, NULL, 3, 0, 1, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'aBolton@ucmerced.edu', NULL, NULL, NULL, NULL, 4, 0, 1, NULL, NULL, 1),
@@ -54,7 +54,7 @@ VALUES
     (14, 'post #9', "des9", "https://loremflickr.com/640/360", 5, 3, "faculty, food", '2020-11-24');
     (10, 'post #10', "des10", "https://loremflickr.com/640/360", 6, 4, "student, entertainment", '2020-11-25');
     (5, 'post #11', "des11", "https://loremflickr.com/640/360", 3, 5, "faculty, fun", '2020-11-28');
-    (5, 'post #12', "des12", "https://loremflickr.com/640/360", 4, 6, "student, food", '2020-11-29');
+    (5, 'post #12', "des12", "https://loremflickr.com/640/360", 4, 6, "student, food", '2020-10-10');
 
 -- Inserting data into Subscriptions
 INSERT INTO Subscriptions (s_dateAdded, s_userID, s_programID, s_eventID, s_sendPushNotification)
@@ -65,7 +65,7 @@ VALUES
     ('2020-11-19', 5, 5, NULL, 0),
     ('2020-11-20', 9, 7, NULL, 1),
     ('2020-11-20', 16, 3, NULL, 0);
-    ('2020-11-20', 16, NULL, 6, 1);
+    ('2020-11-20', 16, NULL, 4, 1);
 
 -- Inserting data into Items
 INSERT INTO Items (i_addedBy, i_name, i_description, i_picture, i_pointsWorth, i_quantitiy, i_programID)
@@ -103,7 +103,7 @@ INSERT INTO ItemsBought (ib_userID, ib_itemID, ib_dateOrdered, ib_dateReceived)
 VALUES
     (4, 4, '2020-12-1', '2020-12-3'),
     (16, 1, '2020-12-3', '2020-12-4'),
-    (16, 1, '2020-12-5', NULL),
+    (16, 1, '2020-12-5', NULL);
 
 -- Inserting data into Points
 INSERT INTO Points (p_userID, p_currentPoints, p_totalPoints)
@@ -113,4 +113,4 @@ VALUES
     (4, 0, 50),
     (5, 0, 20),
     (9, 0, 0),
-    (16, 5, 30),
+    (16, 5, 30);
