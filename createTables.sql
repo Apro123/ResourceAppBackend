@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS Users (
-    u_id INT PRIMARY KEY, 
+    u_id INTEGER PRIMARY KEY AUTOINCREMENT, 
     u_firstname VARCHAR(255) NOT NULL, 
     u_lastname VARCHAR(255) NOT NULL, 
     u_username VARCHAR(255) NOT NULL, 
@@ -14,11 +14,11 @@ CREATE TABLE IF NOT EXISTS Users (
     u_programPriv INT NOT NULL, 
     u_lastLoggedIn DATE NULL, 
     u_currentlyLoggedIPAddress VARCHAR(255) NULL,
-    u_addedBy INT NOT NULL REFERENCES User(u_id)
+    u_addedBy INT NULL REFERENCES User(u_id)
 );
 
 CREATE TABLE IF NOT EXISTS Programs (
-    pr_id INT PRIMARY KEY, 
+    pr_id INTEGER PRIMARY KEY AUTOINCREMENT, 
     pr_name VARCHAR(255) NOT NULL, 
     pr_shortName VARCHAR(255) NULL, 
     pr_description VARCHAR(255) NULL, 
@@ -30,19 +30,19 @@ CREATE TABLE IF NOT EXISTS Programs (
 );
 
 CREATE TABLE IF NOT EXISTS Events (
-    e_id INT PRIMARY KEY, 
+    e_id INTEGER PRIMARY KEY AUTOINCREMENT, 
     e_name VARCHAR(255) NOT NULL, 
     e_description VARCHAR(255) NULL, 
     e_pictureLocation VARCHAR(255) NULL, 
     e_programID INT NOT NULL REFERENCES Programs(u_id), 
-    e_repeated BOOLEAN NOT NULL, 
+    e_repeated INT NOT NULL, 
     e_date DATE NOT NULL, 
     e_tags VARCHAR(255) NULL, 
     e_addedBy INT NOT NULL REFERENCES Users(u_id)
 );
 
 CREATE TABLE IF NOT EXISTS Posts (
-    ps_id INT PRIMARY KEY, 
+    ps_id INTEGER PRIMARY KEY AUTOINCREMENT, 
     ps_addedByUserID INT NOT NULL REFERENCES Users(u_id), 
     ps_name VARCHAR(255) NOT NULL, 
     ps_description VARCHAR(255) NULL, 
@@ -54,16 +54,16 @@ CREATE TABLE IF NOT EXISTS Posts (
 );
 
 CREATE TABLE IF NOT EXISTS Subscriptions (
-    s_id INT PRIMARY KEY, 
+    s_id INTEGER PRIMARY KEY AUTOINCREMENT, 
     s_dateAdded DATE NOT NULL, 
     s_userID INT NOT NULL REFERENCES Users(u_id), 
     s_programID INT NOT NULL REFERENCES Programs(pr_id), 
     s_eventID INT NOT NULL REFERENCES Events(e_id), 
-    s_sendPushNotification BOOLEAN NOT NULL
+    s_sendPushNotification INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Items (
-    i_id INT PRIMARY KEY, 
+    i_id INTEGER PRIMARY KEY AUTOINCREMENT, 
     i_addedBy INT NOT NULL REFERENCES Users(u_id), 
     i_name VARCHAR(255) NOT NULL, 
     i_description VARCHAR(255) NULL, 
@@ -74,23 +74,23 @@ CREATE TABLE IF NOT EXISTS Items (
 );
 
 CREATE TABLE IF NOT EXISTS PointOpp (
-    po_id INT PRIMARY KEY, 
+    po_id INTEGER PRIMARY KEY AUTOINCREMENT, 
     po_name VARCHAR(255) NOT NULL, 
     po_description VARCHAR(255) NULL, 
     po_type VARCHAR(255) NULL, 
     po_externalLink VARCHAR(255) NULL, 
-    po_postUniqieID INT NOT NULL REFERENCES Posts(ps_id)
+    po_postUniqueID INT NOT NULL REFERENCES Posts(ps_id)
 );
 
 CREATE TABLE IF NOT EXISTS PointHistory (
-    ph_id INT PRIMARY KEY, 
+    ph_id INTEGER PRIMARY KEY AUTOINCREMENT, 
     ph_userID INT NOT NULL REFERENCES Users(u_id), 
     ph_pointOppID INT NOT NULL REFERENCES PointOpp(po_id), 
     ph_actualPointsEarned INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS ItemsBought (
-    ib_id INT PRIMARY KEY, 
+    ib_id INTEGER PRIMARY KEY AUTOINCREMENT, 
     ib_userID INT NOT NULL REFERENCES Users(u_id), 
     ib_itemID INT NOT NULL REFERENCES Items(i_id), 
     ib_dateOrdered VARCHAR(255) NOT NULL, 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS ItemsBought (
 ); 
 
 CREATE TABLE IF NOT EXISTS Points (
-    p_id INT PRIMARY KEY, 
+    p_id INTEGER PRIMARY KEY AUTOINCREMENT, 
     p_userID INT NOT NULL REFERENCES Users(u_id), 
     p_currentPoints INT NOT NULL, 
     p_totalPoints INT NOT NULL
