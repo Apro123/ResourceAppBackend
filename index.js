@@ -55,7 +55,32 @@ queries = [
   //6
   `SELECT u_id, u_username, COUNT(*) FROM Users, Events WHERE u_programPriv = 1 AND e_addedBy = u_id GROUP BY u_id`,
   //7
-  `SELECT u_id, u_username FROM Users, Programs WHERE u_programPriv = 1 AND pr_programManagerUserID = u_id AND pr_name = "program #3" GROUP BY u_id`
+  `SELECT u_id, u_username FROM Users, Programs WHERE u_programPriv = 1 AND pr_programManagerUserID = u_id AND pr_name = "program #3" GROUP BY u_id`,
+  //8
+  `INSERT INTO Users (u_firstname, u_lastname, u_username, u_pictureURL, u_schoolEmail, u_schoolID, u_password, u_genderTitle, u_professionalTitle, u_affiliatedProgramID, u_adminPriv, u_programPriv, u_lastLoggedIn, u_currentlyLoggedIPAddress, u_addedBy)
+  VALUES
+      ('user', '11', 'user #11', "https://loremflickr.com/640/360", 'user11@ucmerced.edu', '802789240', 'password1', "He/His/Him", "Student", NULL, 0, 0, NULL, NULL, NULL);
+  `,
+  //9
+  `
+  Insert INTO Subscriptions (s_dateAdded, s_userID, s_programID, s_eventID, s_sendPushNotification)
+  VALUES (${Date.now()}, (SELECT u_id from Users where u_username = "user #11" LIMIT 1), (SELECT pr_id FROM Programs where pr_name = "program #1" LIMIT 1), NULL, 0);
+  `,
+  //10
+  `
+  UPDATE Subscriptions
+  SET s_programID = (Select pr_id FROM Programs Where pr_name = "program #2" LIMIT 1)
+  WHERE s_programID = (Select pr_id FROM Programs Where pr_name = "program #1" LIMIT 1)
+  `,
+  //11
+  `
+  SELECT ect+pct FROM (
+    SELECT COUNT(e_id) as ect FROM Events WHERE e_addedBy = (SELECT u_id From Users WHERE u_username = "admin user #1")
+  ), (
+    SELECT COUNT(ps_id) as pct FROM Posts WHERE ps_addedByUserID = (SELECT u_id From Users WHERE u_username = "admin user #1")
+  )
+  `
+  //12
 ]
 
 async function dbq(q) {
@@ -63,6 +88,7 @@ async function dbq(q) {
     let sql = queries[q-1];
     db.all(sql, [], (err,rows) => {
       console.log(err);
+      console.log(rows);
       resolve(rows);
     });
   });
@@ -70,7 +96,8 @@ async function dbq(q) {
 
 app.get("/test", async function(req, res) {
   // console.log(req.body['query']);
-  var d = await dbq(req.body['query'])
+  var d = await dbq(req.body['query']);
+  // console.log(Date.now());
   res.send({
     "status": "success",
     "data": d
