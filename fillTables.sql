@@ -1,20 +1,20 @@
 -- Inserting data into Users
 INSERT INTO Users (u_firstname, u_lastname, u_username, u_pictureURL, u_schoolEmail, u_schoolID, u_password, u_genderTitle, u_professionalTitle, u_affiliatedProgramID, u_adminPriv, u_programPriv, u_lastLoggedIn, u_currentlyLoggedIPAddress, u_addedBy)
 VALUES
-    ('Victoria', 'Preece', 'admin user #1', "https://loremflickr.com/640/360", 'vPreece@ucmerced.edu', '802789240', 'password1', "She/Her", "IT Administrator", NULL, 0, 0, NULL, NULL, NULL),
+    ('Victoria', 'Preece', 'admin user #1', "https://loremflickr.com/640/360", 'vPreece@ucmerced.edu', '802789240', 'password1', "She/Her", "IT Administrator", NULL, 1, 1, NULL, NULL, NULL),
     ('Payton', 'Greaves', 'user #2', "https://loremflickr.com/640/360", 'pGreaves@ucmerced.edu', '378502872', 'password2', "She/Her", "Student", NULL, 0, 0, NULL, NULL, NULL),
     ('Roisin', 'Tierney', 'user #3', "https://loremflickr.com/640/360", 'rTierney@ucmerced.edu', '024567491', 'password3', "He/His/Him", "Student", NULL, 0, 0, NULL, NULL, NULL),
     ('Keiren', 'Robin', 'user #4', "https://loremflickr.com/640/360", 'kRobin@ucmerced.edu', '456872035', 'password4', "He/His/Him", "Student", NULL, 0, 0, NULL, NULL, NULL),
-    ('Rose', 'Handley', 'program user #5', "https://loremflickr.com/640/360", 'rHandley@ucmerced.edu', '867542098', 'password5', "She/Her", "Program Intern", NULL, 0, 0, NULL, NULL, 1),
+    ('Rose', 'Handley', 'program user #5', "https://loremflickr.com/640/360", 'rHandley@ucmerced.edu', '867542098', 'password5', "She/Her", "Program Intern", NULL, 0, 1, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'rHandley@ucmerced.edu', NULL, NULL, NULL, NULL, 1, 0, 1, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'rHandley@ucmerced.edu', NULL, NULL, NULL, NULL, 2, 0, 1, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'rHandley@ucmerced.edu', NULL, NULL, NULL, NULL, 3, 0, 1, NULL, NULL, 1),
     ('Phoebe', 'Legge', 'user #6', "https://loremflickr.com/640/360", 'pLegge@ucmerced.edu', '324587601', 'password6', "She/Her", "Student", NULL, 0, 0, NULL, NULL, NULL),
-    ('Asha', 'Bolton', 'program user #7', "https://loremflickr.com/640/360", 'aBolton@ucmerced.edu', '457822146', 'password7', "She/Her", "Program Intern", NULL, 0, 0, NULL, NULL, 1),
+    ('Asha', 'Bolton', 'program user #7', "https://loremflickr.com/640/360", 'aBolton@ucmerced.edu', '457822146', 'password7', "She/Her", "Program Intern", NULL, 0, 1, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'aBolton@ucmerced.edu', NULL, NULL, NULL, NULL, 3, 0, 1, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'aBolton@ucmerced.edu', NULL, NULL, NULL, NULL, 4, 0, 1, NULL, NULL, 1),
     ('Abubakr', 'Buxton', 'user #8', "https://loremflickr.com/640/360", 'aBuxton@ucmerced.edu', '145687923', 'password8', "She/Her", "Student", NULL, 0, 0, NULL, NULL, NULL),
-    ('William', 'Hayes', 'program user #9', "https://loremflickr.com/640/360", 'wHayes@ucmerced.edu', '612358497', 'password9', "He/His/Him", "Program Intern", NULL, 0, 0, NULL, NULL, 1),
+    ('William', 'Hayes', 'program user #9', "https://loremflickr.com/640/360", 'wHayes@ucmerced.edu', '612358497', 'password9', "He/His/Him", "Program Intern", NULL, 0, 1, NULL, NULL, 1),
     (NULL, NULL, NULL, NULL, 'wHayes@ucmerced.edu', NULL, NULL, NULL, NULL, 5, 0, 1, NULL, NULL, 1),
     ('Bjorn', 'Villarreal', 'user #10', "https://loremflickr.com/640/360", 'bVillarreal@ucmerced.edu', '542031782', 'password10', "He/His/Him", "Student", NULL, 0, 0, NULL, NULL, 1);
 

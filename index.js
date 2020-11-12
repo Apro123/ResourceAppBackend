@@ -34,7 +34,7 @@ var db = new sqlite3.Database('rapp.db');
 
 queries = [
   //1
-  `SELECT ps_id FROM Posts
+  `SELECT ps_id, ps_name FROM Posts
   WHERE ps_id IN
   (
     SELECT ps_id FROM Posts, Events, Programs, Subscriptions, Users WHERE ps_eventID = e_id AND e_programID = pr_id AND pr_id = s_programID AND s_userID = u_id AND u_username = "user #2"
@@ -44,12 +44,18 @@ queries = [
   ORDER BY ps_dateAdded LIMIT 10 OFFSET 0
     `,
     //2
-  `SELECT e_id FROM Events, Users
+  `SELECT e_id, e_name FROM Events, Users
   WHERE e_addedBy = u_id AND u_username = "admin user #1" `,
   //3
-  `SELECT ps_id FROM Posts, Events Where ps_eventID = e_id AND e_name = "event #2" `,
+  `SELECT ps_id, ps_name FROM Posts, Events Where ps_eventID = e_id AND e_name = "event #2" `,
   //4
-  `SELECT pr_id, pr_name, COUNT(ps_id) FROM Posts, Events, Programs WHERE ps_eventID = e_id AND e_programID = pr_id GROUP BY pr_id`
+  `SELECT pr_id, pr_name, COUNT(ps_id) FROM Posts, Events, Programs WHERE ps_eventID = e_id AND e_programID = pr_id GROUP BY pr_id`,
+  //5
+  `SELECT u_id, u_username, u_schoolEmail, COUNT(*) FROM Users WHERE u_programPriv = 1 GROUP BY u_schoolEmail`,
+  //6
+  `SELECT u_id, u_username, COUNT(*) FROM Users, Events WHERE u_programPriv = 1 AND e_addedBy = u_id GROUP BY u_id`,
+  //7
+  `SELECT u_id, u_username FROM Users, Programs WHERE u_programPriv = 1 AND pr_programManagerUserID = u_id AND pr_name = "program #3" GROUP BY u_id`
 ]
 
 async function dbq(q) {
