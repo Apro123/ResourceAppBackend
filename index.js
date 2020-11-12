@@ -79,8 +79,14 @@ queries = [
   ), (
     SELECT COUNT(ps_id) as pct FROM Posts WHERE ps_addedByUserID = (SELECT u_id From Users WHERE u_username = "admin user #1")
   )
-  `
+  `,
   //12
+  `
+  UPDATE Users
+  SET u_addedBy = (SELECT u_id FROM Users WHERE u_username = "admin #1" AND u_adminPriv = 1), u_affiliatedprogramID = (SELECT pr_id FROM Programs WHERE pr_name = "program #5" LIMIT 1),
+  u_programPriv = 1
+  WHERE u_id = (SELECT u_id from Users WHERE u_username = "user #11");
+  `
 ]
 
 async function dbq(q) {
