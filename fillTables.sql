@@ -68,7 +68,7 @@ VALUES
     ('2020-11-20', 16, NULL, 4, 1);
 
 -- Inserting data into Items
-INSERT INTO Items (i_addedBy, i_name, i_description, i_picture, i_pointsWorth, i_quantitiy, i_programID)
+INSERT INTO Items (i_addedBy, i_name, i_description, i_picture, i_pointsWorth, i_quantity, i_programID)
 VALUES
     (1, 'item #1', "des1", "https://loremflickr.com/640/360", 15, 10, 1),
     (5, 'item #2', "des2", "https://loremflickr.com/640/360", 250, 3, 3),

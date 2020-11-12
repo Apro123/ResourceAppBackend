@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS Items (
     i_description VARCHAR(255) NULL,
     i_picture VARCHAR(255) NULL,
     i_pointsWorth INT NOT NULL,
-    i_quantitiy INT NOT NULL,
+    i_quantity INT NOT NULL,
     i_programID INT NOT NULL REFERENCES Programs(pr_id)
 );
 
