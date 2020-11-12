@@ -49,11 +49,11 @@ VALUES
     (1, 'post #4', "des4", "https://loremflickr.com/640/360", 3, 4, "student, food", '2020-11-17'),
     (10, 'post #5', "des5", "https://loremflickr.com/640/360", 3, 5, "student, entertainment", '2020-11-18'),
     (5, 'post #6', "des6", "https://loremflickr.com/640/360", 1, 6, "student, food", '2020-11-19'),
-    (5, 'post #7', "des7", "https://loremflickr.com/640/360", 2, 1, "faculty, entertainment", '2020-11-20');
-    (10, 'post #8', "des8", "https://loremflickr.com/640/360", 4, 2, "student, fun", '2020-11-22');
-    (14, 'post #9', "des9", "https://loremflickr.com/640/360", 5, 3, "faculty, food", '2020-11-24');
-    (10, 'post #10', "des10", "https://loremflickr.com/640/360", 6, 4, "student, entertainment", '2020-11-25');
-    (5, 'post #11', "des11", "https://loremflickr.com/640/360", 3, 5, "faculty, fun", '2020-11-28');
+    (5, 'post #7', "des7", "https://loremflickr.com/640/360", 2, 1, "faculty, entertainment", '2020-11-20'),
+    (10, 'post #8', "des8", "https://loremflickr.com/640/360", 4, 2, "student, fun", '2020-11-22'),
+    (14, 'post #9', "des9", "https://loremflickr.com/640/360", 5, 3, "faculty, food", '2020-11-24'),
+    (10, 'post #10', "des10", "https://loremflickr.com/640/360", 6, 4, "student, entertainment", '2020-11-25'),
+    (5, 'post #11', "des11", "https://loremflickr.com/640/360", 3, 5, "faculty, fun", '2020-11-28'),
     (5, 'post #12', "des12", "https://loremflickr.com/640/360", 4, 6, "student, food", '2020-10-10');
 
 -- Inserting data into Subscriptions

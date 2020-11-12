@@ -32,26 +32,29 @@ var db = new sqlite3.Database('rapp.db');
 
 //app.post ....
 
+queries = [
+  //1
+  `SELECT ps_id FROM Posts
+  WHERE ps_id IN
+  (
+    SELECT ps_id FROM Posts, Events, Programs, Subscriptions, Users WHERE ps_eventID = e_id AND e_programID = pr_id AND pr_id = s_programID AND s_userID = u_id AND u_username = "user #2"
+    UNION
+    SELECT ps_id FROM Posts, Events, Subscriptions, Users WHERE ps_eventID = e_id AND s_eventID = e_id AND s_userID = u_id AND u_username = "user #2"
+  )
+  ORDER BY ps_dateAdded LIMIT 10 OFFSET 0
+    `,
+    //2
+  `SELECT e_id FROM Events, Users
+  WHERE e_addedBy = u_id AND u_username = "admin user #1" `,
+  //3
+  `SELECT ps_id FROM Posts, Events Where ps_eventID = e_id AND e_name = "event #2" `,
+  //4
+  `SELECT pr_id, pr_name, COUNT(ps_id) FROM Posts, Events, Programs WHERE ps_eventID = e_id AND e_programID = pr_id GROUP BY pr_id`
+]
+
 async function dbq(q) {
   return await new Promise(function(resolve, reject) {
-    let sql = ``;
-    if(q == 1) {
-      sql = `SELECT ps_id FROM Posts
-      WHERE ps_id IN
-      (
-        SELECT ps_id FROM Posts, Events, Programs, Subscriptions, Users WHERE ps_eventID = e_id AND e_programID = pr_id AND pr_id = s_programID AND s_userID = u_id
-        INTERSECT
-        SELECT ps_id FROM Posts, Events, Subscriptions, Users WHERE ps_eventID = e_id AND s_eventID = e_id AND s_userID = u_id
-      )
-      ORDER BY ps_dateAdded LIMIT 10 OFFSET 0
-        `;
-    }
-    if(q == 2) {
-      sql = ``;
-    }
-    if(q == 3) {
-      sql = ``;
-    }
+    let sql = queries[q-1];
     db.all(sql, [], (err,rows) => {
       console.log(err);
       resolve(rows);
@@ -60,7 +63,7 @@ async function dbq(q) {
 }
 
 app.get("/test", async function(req, res) {
-  console.log(req.body['query']);
+  // console.log(req.body['query']);
   var d = await dbq(req.body['query'])
   res.send({
     "status": "success",
