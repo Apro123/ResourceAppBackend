@@ -187,11 +187,55 @@ app.get("/test", async function(req, res) {
 });
 
 app.post("/post", async function(req,res) {
-  console.log(req);
+  console.log(req.body);
   res.send({
     "status": "success"
   });
-})
+});
+
+app.post("/login", async function(req,res) {
+
+});
+
+app.post("/register", async function(req,res) {
+
+});
+
+app.put("/subscribeProgram", async function(req,res) {
+
+});
+
+app.get("/getEventsDes", async function(req,res) {
+
+});
+
+app.get("/getEvents", async function(req,res) {
+
+});
+
+app.put("/subscribeEvent", async function(req,res) {
+
+});
+
+app.get("/getPosts", async function(req,res) {
+
+});
+
+app.get("/getPrograms", async function(req,res) {
+
+});
+
+app.post("/addProgram", async function(req,res) {
+
+});
+
+app.put("/addProgramManager", async function(req,res) {
+
+});
+
+app.post("/addEvent", async function(req,res) {
+
+});
 
 app.get("/", function(req, res) {
   res.send({
