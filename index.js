@@ -89,9 +89,9 @@ queries = [
   `,
   //13
   `
-  INSERT INTO Items (i_addedBy, i_name, i_description, i_picture, i_pointsWorth, i_quantity, i_programID) 
-  VALUES 
-      ((SELECT u_id FROM Users WHERE u_username = "user #3"), "Flask", "des7", "https://loremflickr.com/640/360", 20, 2, (SELECT pr_id FROM Programs WHERE pr_name = "program #1")), 
+  INSERT INTO Items (i_addedBy, i_name, i_description, i_picture, i_pointsWorth, i_quantity, i_programID)
+  VALUES
+      ((SELECT u_id FROM Users WHERE u_username = "user #3"), "Flask", "des7", "https://loremflickr.com/640/360", 20, 2, (SELECT pr_id FROM Programs WHERE pr_name = "program #1")),
       ((SELECT u_id FROM Users WHERE u_username = "user #3"), "Bottle Opener", "des8", "https://loremflickr.com/640/360", 40, 4, (SELECT pr_id FROM Programs WHERE pr_name = "program #1"));
   `
   ,
@@ -109,7 +109,7 @@ queries = [
   `
   INSERT INTO Events (e_name, e_description, e_pictureLocation, e_programID, e_repeated, e_date, e_addedBy) VALUES (
     "event #7",
-    "des7", 
+    "des7",
     "https://loremflickr.com/640/360",
     (SELECT pr_id FROM Programs WHERE pr_name = "program #4"),
     "Weekly",
@@ -134,10 +134,10 @@ queries = [
   ,
   //18
   `
-  Insert into PointHistory (ph_userID, ph_pointOppID, ph_actualPointsEarned) 
+  Insert into PointHistory (ph_userID, ph_pointOppID, ph_actualPointsEarned)
   Values (
-    (SELECT u_id from Users WHERE u_username = "user #6"), 
-    (SELECT po_id FROM PointOpp WHERE po_id = (SELECT ps_pointOpportunity FROM Posts WHERE ps_name = "post #1")), 
+    (SELECT u_id from Users WHERE u_username = "user #6"),
+    (SELECT po_id FROM PointOpp WHERE po_id = (SELECT ps_pointOpportunity FROM Posts WHERE ps_name = "post #1")),
     1);
   Update Points
   Set p_currentPoints = p_currentPoints + (SELECT ph_actualPointsEarned FROM PointHistory WHERE ph_userID = (SELECT u_id FROM Users WHERE u_username = "user #6"))
@@ -147,8 +147,8 @@ queries = [
   //19
   `
   Update Points
-  Set 
-    p_currentPoints = (SELECT SUM(ph_actualPointsEarned) FROM PointHistory WHERE ph_userID = (SELECT u_id FROM Users WHERE u_username = "user #3")), 
+  Set
+    p_currentPoints = (SELECT SUM(ph_actualPointsEarned) FROM PointHistory WHERE ph_userID = (SELECT u_id FROM Users WHERE u_username = "user #3")),
     p_totalPoints = (SELECT SUM(ph_actualPointsEarned) FROM PointHistory WHERE ph_userID = (SELECT u_id FROM Users WHERE u_username = "user #3"))
   WHERE p_userID = (SELECT u_id FROM Users WHERE u_username = "user #3");
   `
@@ -157,11 +157,11 @@ queries = [
   `
   INSERT INTO ItemsBought (ib_userID, ib_itemID, ib_dateOrdered)
   VALUES (
-    (SELECT u_id FROM Users WHERE u_username = "user #2"), 
-    (SELECT i_id FROM Items WHERE i_name = "item #1"), 
+    (SELECT u_id FROM Users WHERE u_username = "user #2"),
+    (SELECT i_id FROM Items WHERE i_name = "item #1"),
     "2020-12-1");
     UPDATE Items SET i_quantity = i_quantity - 1;
-    UPDATE Points SET p_currentPoints = p_currentPoints - (SELECT i_pointsWorth FROM Items WHERE i_name = "item #1") WHERE p_userID IN (SELECT u_id FROM Users WHERE u_username = "user #2");    
+    UPDATE Points SET p_currentPoints = p_currentPoints - (SELECT i_pointsWorth FROM Items WHERE i_name = "item #1") WHERE p_userID IN (SELECT u_id FROM Users WHERE u_username = "user #2");
   `
 ]
 
@@ -185,6 +185,13 @@ app.get("/test", async function(req, res) {
     "data": d
   });
 });
+
+app.post("/post", async function(req,res) {
+  console.log(req);
+  res.send({
+    "status": "success"
+  });
+})
 
 app.get("/", function(req, res) {
   res.send({
