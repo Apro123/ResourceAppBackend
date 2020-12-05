@@ -176,6 +176,166 @@ async function dbq(q) {
   });
 }
 
+function collapse(arr, grpBy, multCols) {
+  //collapse on key
+  temp = [];
+  for (const arrKey in arr) {
+    //for each element add it into temp
+    var found = false;
+    //look to see if existing grp by attribute exists
+    for (const tempKey in temp) {
+      // if the group by column is the same then you have found a match
+      if(temp[tempKey][grpBy] == arr[arrKey][grpBy]) {
+
+        //for every multiple column
+        for(const col in multCols) {
+          if(Array.isArray(temp[tempKey][multCols[col]]) && arr[arrKey][multCols[col]] != null) {
+            temp[tempKey][multCols[col]].push(arr[arrKey][multCols[col]]);
+          } else {
+            if(temp[tempKey][multCols[col]] != null && arr[arrKey][multCols[col]] != null) {
+              temp[tempKey][multCols[col]] = [temp[tempKey][multCols[col]], arr[arrKey][multCols[col]]];
+            } else if (arr[arrKey][multCols[col]] != null) {
+              temp[tempKey][multCols[col]] = arr[arrKey][multCols[col]];
+            }
+
+          }
+        }
+
+        found = true;
+      }
+    }
+
+    if(!found) {
+      //add it into temp
+      temp.push(arr[arrKey]);
+    }
+  }
+
+  return temp;
+}
+
+async function dbprograms() {
+  return await new Promise(function(resolve, reject) {
+    let sql = `SELECT * FROM Programs ORDER BY pr_id`;
+    db.all(sql, [], (err,rows) => {
+      // console.log(err);
+      // console.log(rows);
+
+      resolve(collapse(rows, "pr_name", ["pr_eventID", "pr_programManagerUserID"]));
+    });
+  });
+}
+
+async function dbposts(id) {
+  return await new Promise(function(resolve, reject) {
+    let sql =  `
+    SELECT * FROM Posts 
+    INNER JOIN Events ON ps_eventID = e_id
+    WHERE ps_id IN
+    (
+        SELECT ps_id FROM Posts, Events, Programs, Subscriptions, Users WHERE ps_eventID = e_id AND e_programID = pr_id AND pr_id = s_programID AND s_userID = u_id AND u_id = ?
+    UNION
+    SELECT ps_id FROM Posts, Events, Subscriptions, Users WHERE ps_eventID = e_id AND s_eventID = e_id AND s_userID = u_id AND u_id = ?
+    ) 
+    ORDER BY ps_dateAdded LIMIT 30 OFFSET 0
+    `; //user #2
+    db.all(sql, [id], (err,rows) => {
+      // console.log(err);
+      // console.log(rows);
+      resolve(rows);
+    });
+  });
+}
+
+async function dblogin(email, password) {
+  return await new Promise(function(resolve, reject) {
+    let sql = `SELECT 
+    u_id,
+    u_firstname,
+    u_lastname,
+    u_username,
+    u_pictureURL,
+    u_schoolEmail,
+    u_schoolID,
+    u_genderTitle,
+    u_professionalTitle,
+    u_adminPriv,
+    u_programPriv
+    FROM Users WHERE u_schoolEmail=? AND u_password=?`;
+    db.all(sql, [email, password], (err,rows) => {
+      // console.log(err);
+      // console.log(rows);
+      resolve(rows);
+    });
+  });
+}
+
+async function dbgetSubs(userid) {
+  return await new Promise(function(resolve, reject) {
+    let sql = "SELECT * FROM Subscriptions WHERE s_userID = ?";
+    db.all(sql, [userid], (err,rows) => {
+      if(err) {
+        console.log(err);
+      }
+      // console.log(err);
+      // console.log(rows);
+      resolve(collapse(rows, "s_userID", ["s_programID","s_eventID"]));
+    });
+  });
+}
+
+async function dbsubProgram(programid, userid) {
+  return await new Promise(function(resolve, reject) {
+    let sql = `Insert INTO Subscriptions (s_dateAdded, s_userID, s_programID, s_eventID, s_sendPushNotification)
+    VALUES (${Date.now()}, (SELECT u_id from Users where u_username = ? LIMIT 1), (SELECT pr_id FROM Programs where pr_id = ? LIMIT 1), NULL, 0);
+    `;
+    db.all(sql, [programid, userid], (err,rows) => {
+      if(err) {
+        console.log(err);
+        resolve("error");
+      } else {
+        resolve("success");
+      }
+    });
+  });
+}
+
+async function dbunsubProgram(programid, userid) {
+  return await new Promise(function(resolve, reject) {
+    let sql = `DELETE FROM Subscriptions WHERE s_programID = ? AND s_userID = ?`;
+    db.all(sql, [programid, userid], (err,rows) => {
+      if(err) {
+        console.log(err);
+        resolve("error");
+      } else {
+        resolve("success");
+      }
+    });
+  });
+}
+
+async function dbgetEvent(eventid) {
+  return await new Promise(function(resolve, reject) {
+    let sql = "SELECT * FROM Events WHERE e_id = ?";
+    db.all(sql, [eventid], (err,rows) => {
+      // console.log(err);
+      // console.log(rows);
+      resolve(rows);
+    });
+  });
+}
+
+async function dbgetEvents(eventid) {
+  return await new Promise(function(resolve, reject) {
+    let sql = "SELECT * FROM Events";
+    db.all(sql, [], (err,rows) => {
+      // console.log(err);
+      // console.log(rows);
+      resolve(rows);
+    });
+  });
+}
+
 app.get("/test", async function(req, res) {
   // console.log(req.body['query']);
   var d = await dbq(req.body['query']);
@@ -194,23 +354,66 @@ app.post("/post", async function(req,res) {
 });
 
 app.post("/login", async function(req,res) {
-
+  //{"email": email, "password": password}
+  var d = await dblogin(req.body['email'], req.body['password']);
+  if(d.length == 0) {
+    res.send({
+      "status": "invalid login"
+    });
+  } else {
+    var programs = await dbprograms(); //get all programs
+    var subs = await dbgetSubs(d[0].u_id);
+    var posts = await dbposts(d[0].u_id);
+    res.send({
+      "status": "success",
+      "user": d,
+      "posts": posts,
+      "program": programs,
+      "subs": subs
+    });
+  }
 });
 
-app.post("/register", async function(req,res) {
 
+app.post("/subscribeProgram", async function(req,res) {
+  // req.body = {"program_id": program, "user_id": u_id}
+  var status = await dbsubProgram(req.body['program_id'], req.body['user_id']);
+  res.send({
+    "status": status
+  });
 });
 
-app.put("/subscribeProgram", async function(req,res) {
-
+app.put("/unsubscribeProgram", async function(req,res) {
+  // req.body = {"program_id": program, "user_id": u_id}
+  var status = await dbunsubProgram(req.body['program_id'], req.body['user_id']);
+  res.send({
+    "status": status
+  });
 });
 
 app.get("/getEventsDes", async function(req,res) {
-
+  // req.body = {"event_id": event}
+  var d = await dbgetEvent(req.body['event_id']);
+  if(d.length == 0) {
+    res.send({
+      "status": "not found"
+    });
+  } else {
+    res.send({
+      "status": "success",
+      "data": d[0]
+    });
+  }
 });
 
 app.get("/getEvents", async function(req,res) {
-
+  var d = await dbgetEvents();
+  var subs = await dbgetSubs(d[0].u_id);
+  res.send({
+    "status": "success",
+    "events": d,
+    "subscriptions": subs
+  });
 });
 
 app.put("/subscribeEvent", async function(req,res) {
@@ -218,11 +421,25 @@ app.put("/subscribeEvent", async function(req,res) {
 });
 
 app.get("/getPosts", async function(req,res) {
-
+  //req.query = {"user_id":u_id)
+  var d = await dbposts(req.query['user_id']);
+  var subs = await dbgetSubs(req.query['user_id']);
+  res.send({
+    "status": "success",
+    "posts": d,
+    "subscriptions": subs
+  });
 });
 
 app.get("/getPrograms", async function(req,res) {
-
+  //req.query = {"user_id":u_id)
+  var d = await dbprograms();
+  var subs = await dbgetSubs(req.query['user_id']);
+  res.send({
+    "status": "success",
+    "programs": d,
+    "subscriptions": subs
+  });
 });
 
 app.post("/addProgram", async function(req,res) {
@@ -238,6 +455,7 @@ app.post("/addEvent", async function(req,res) {
 });
 
 app.get("/", function(req, res) {
+  console.log(req.query);
   res.send({
     "status": "success",
     "data": "Visit /q# for each of the 20 queries to execute"
