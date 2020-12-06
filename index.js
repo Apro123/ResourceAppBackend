@@ -417,6 +417,19 @@ async function dbitemsbought(uid) {
   });
 }
 
+async function dbCreateProgram(pr_name, pr_shortName, pr_description, pr_physicalLocation, pr_addedByAdminUserID, pr_programManagerUserID, pr_tags) {
+  return await new Promise(function(resolve, reject) {
+    let sql = "INSERT INTO Programs (pr_name, pr_shortName, pr_description, pr_logoLocation, pr_physicalLocation, pr_addedByAdminUserID, pr_eventID, pr_programManagerUserID, pr_tags) VALUES(?, ?, ?, 'https://loremflickr.com/640/360', ?, ?, NULL, ?, ?);";
+    db.all(sql, [pr_name, pr_shortName, pr_description, pr_physicalLocation, pr_addedByAdminUserID, pr_programManagerUserID, pr_tags], (err,rows) => {
+      if(err) {
+        console.log(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
 app.get("/test", async function(req, res) {
   // console.log(req.body['query']);
   var d = await dbq(req.body['query']);
@@ -563,7 +576,12 @@ app.get("/getPrograms", async function(req,res) {
 });
 
 app.post("/addProgram", async function(req,res) {
-
+  //req.query = {"name":pr_name, "shortName":pr_shortName, "des":pr_description, "location":pr_physicalLocation, "adminID":pr_addedByAdminUserID, "programManagerID":pr_programManagerUserID, "tags":pr_tags}
+  var d = await dbCreateProgram(req.body['name'],req.body['shortName'],req.body['des'],req.body['location'],req.body['adminID'],req.body['programManagerID'],req.body['tags']
+  );
+  res.send({
+    "status": "success"
+  });
 });
 
 app.put("/addProgramManager", async function(req,res) {
