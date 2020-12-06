@@ -307,12 +307,10 @@ async function dbsubProgram(programid, userid) {
   });
 }
 
-async function dbitemQuan(itemid, quan) {
+async function dbunsubProgram(programid, userid) {
   return await new Promise(function(resolve, reject) {
-    let sql = `UPDATE Items
-    SET i_quantity = ?
-    WHERE i_id = ?`;
-    db.all(sql, [quan, itemid], (err,rows) => {
+    let sql = `DELETE FROM Subscriptions WHERE s_programID = ? AND s_userID = ?`;
+    db.all(sql, [programid, userid], (err,rows) => {
       if(err) {
         console.log(err);
         resolve("error");
@@ -323,10 +321,26 @@ async function dbitemQuan(itemid, quan) {
   });
 }
 
-async function dbunsubProgram(programid, userid) {
+async function dbsubEvent(eventid, userid) {
   return await new Promise(function(resolve, reject) {
-    let sql = `DELETE FROM Subscriptions WHERE s_programID = ? AND s_userID = ?`;
-    db.all(sql, [programid, userid], (err,rows) => {
+    let sql = `Insert INTO Subscriptions (s_dateAdded, s_userID, s_programID, s_eventID, s_sendPushNotification)
+    VALUES (${Date.now()}, (SELECT u_id from Users where u_username = ? LIMIT 1), NULL, (SELECT e_id FROM Events where e_id = ? LIMIT 1), 0);
+    `;
+    db.all(sql, [eventid, userid], (err,rows) => {
+      if(err) {
+        console.log(err);
+        resolve("error");
+      } else {
+        resolve("success");
+      }
+    });
+  });
+}
+
+async function dbunsubEvent(eventid, userid) {
+  return await new Promise(function(resolve, reject) {
+    let sql = `DELETE FROM Subscriptions WHERE s_eventID = ? AND s_userID = ?`;
+    db.all(sql, [eventid, userid], (err,rows) => {
       if(err) {
         console.log(err);
         resolve("error");
@@ -369,6 +383,22 @@ async function dbitems() {
       // console.log(err);
       // console.log(rows);
       resolve(rows);
+    });
+  });
+}
+
+async function dbitemQuan(itemid, quan) {
+  return await new Promise(function(resolve, reject) {
+    let sql = `UPDATE Items
+    SET i_quantity = ?
+    WHERE i_id = ?`;
+    db.all(sql, [quan, itemid], (err,rows) => {
+      if(err) {
+        console.log(err);
+        resolve("error");
+      } else {
+        resolve("success");
+      }
     });
   });
 }
@@ -467,9 +497,20 @@ app.get("/getEvents", async function(req,res) {
   });
 });
 
+app.post("/subscribeEvent", async function(req,res) {
+  // req.body = {"event_id": program, "user_id": u_id}
+  var status = await dbsubEvent(req.body['event_id'], req.body['user_id']);
+  res.send({
+    "status": status
+  });
+});
 
-app.put("/subscribeEvent", async function(req,res) {
-
+app.put("/unsubscribeEvent", async function(req,res) {
+  // req.body = {"event_id": program, "user_id": u_id}
+  var status = await dbunsubEvent(req.body['event_id'], req.body['user_id']);
+  res.send({
+    "status": status
+  });
 });
 
 app.get("/getPosts", async function(req,res) {
