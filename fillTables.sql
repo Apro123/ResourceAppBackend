@@ -205,7 +205,7 @@ VALUES
     (40, 'item #15', "des15", "https://loremflickr.com/640/360", 100, 5, 11),
     (44, 'item #16', "des16", "https://loremflickr.com/640/360", 50, 10, 10),
     (44, 'item #17', "des17", "https://loremflickr.com/640/360", 30, 15, 10),
-    (25, 'item #18', "des18", "https://loremflickr.com/640/360", 75, 8, 14);
+    (25, 'item #18', "des18", "https://loremflickr.com/640/360", 75, 8, 13);
 
 -- Inserting data into PointOpp
 INSERT INTO PointOpp (po_name, po_description, po_type, po_externalLink, po_pointsPossible)

@@ -240,6 +240,9 @@ async function dbposts(id) {
     ORDER BY ps_dateAdded LIMIT 30 OFFSET 0
     `; //user #2
     db.all(sql, [id], (err,rows) => {
+      if(err) {
+        console.log(err);
+      }
       // console.log(err);
       // console.log(rows);
       resolve(rows);
@@ -259,13 +262,17 @@ async function dblogin(email, password) {
     u_schoolID,
     u_genderTitle,
     u_professionalTitle,
+    u_affiliatedProgramID,
     u_adminPriv,
     u_programPriv
-    FROM Users WHERE u_schoolEmail=? AND u_password=?`;
+    FROM Users WHERE u_schoolEmail=(SELECT u_schoolEmail FROM Users WHERE u_schoolEmail = ? AND u_password=?)`;
     db.all(sql, [email, password], (err,rows) => {
+      if(err) {
+        console.log(err);
+      }
       // console.log(err);
       // console.log(rows);
-      resolve(rows);
+      resolve(collapse(rows, "u_schoolEmail", ["u_affiliatedProgramID"]));
     });
   });
 }
@@ -290,6 +297,22 @@ async function dbsubProgram(programid, userid) {
     VALUES (${Date.now()}, (SELECT u_id from Users where u_username = ? LIMIT 1), (SELECT pr_id FROM Programs where pr_id = ? LIMIT 1), NULL, 0);
     `;
     db.all(sql, [programid, userid], (err,rows) => {
+      if(err) {
+        console.log(err);
+        resolve("error");
+      } else {
+        resolve("success");
+      }
+    });
+  });
+}
+
+async function dbitemQuan(itemid, quan) {
+  return await new Promise(function(resolve, reject) {
+    let sql = `UPDATE Items
+    SET i_quantity = ?
+    WHERE i_id = ?`;
+    db.all(sql, [quan, itemid], (err,rows) => {
       if(err) {
         console.log(err);
         resolve("error");
@@ -329,6 +352,34 @@ async function dbgetEvents(eventid) {
   return await new Promise(function(resolve, reject) {
     let sql = "SELECT * FROM Events";
     db.all(sql, [], (err,rows) => {
+      // console.log(err);
+      // console.log(rows);
+      resolve(rows);
+    });
+  });
+}
+
+async function dbitems() {
+  return await new Promise(function(resolve, reject) {
+    let sql = "SELECT * FROM Items";
+    db.all(sql, [], (err,rows) => {
+      if(err) {
+        console.log(err);
+      }
+      // console.log(err);
+      // console.log(rows);
+      resolve(rows);
+    });
+  });
+}
+
+async function dbitemsbought(uid) {
+  return await new Promise(function(resolve, reject) {
+    let sql = "SELECT * FROM ItemsBought, Items WHERE ib_itemID = i_id AND ib_userID = ? ";
+    db.all(sql, [uid], (err,rows) => {
+      if(err) {
+        console.log(err);
+      }
       // console.log(err);
       // console.log(rows);
       resolve(rows);
@@ -416,18 +467,46 @@ app.get("/getEvents", async function(req,res) {
   });
 });
 
+
 app.put("/subscribeEvent", async function(req,res) {
 
 });
 
 app.get("/getPosts", async function(req,res) {
   //req.query = {"user_id":u_id)
+  // console.log(req.params);
+  // console.log(req.query);
   var d = await dbposts(req.query['user_id']);
-  var subs = await dbgetSubs(req.query['user_id']);
+  // var subs = await dbgetSubs(req.query['user_id']);
   res.send({
     "status": "success",
-    "posts": d,
-    "subscriptions": subs
+    "posts": d
+    // "subscriptions": subs
+  });
+});
+
+app.get("/getItems", async function(req,res) {
+  var d = await dbitems();
+  res.send({
+    "status": "success",
+    "items": d
+  });
+});
+
+app.get("/getItemsBought", async function(req,res) {
+  //req.query = {"user_id":u_id)
+  var d = await dbitemsbought(req.query['user_id']);
+  res.send({
+    "status": "success",
+    "items": d
+  });
+});
+
+app.post("/updateItemQuantity", async function(req,res) {
+  // req.body = {"item_id": id, "quantity": qnum}
+  var status = await dbitemQuan(req.body['item_id'], req.body['quantity']);
+  res.send({
+    "status": status
   });
 });
 
@@ -455,7 +534,7 @@ app.post("/addEvent", async function(req,res) {
 });
 
 app.get("/", function(req, res) {
-  console.log(req.query);
+  // console.log(req.query);
   res.send({
     "status": "success",
     "data": "Visit /q# for each of the 20 queries to execute"
