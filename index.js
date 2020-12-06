@@ -430,6 +430,19 @@ async function dbCreateProgram(pr_name, pr_shortName, pr_description, pr_physica
   });
 }
 
+async function dbCreateEvent(e_name, e_description, e_programID, e_repeated, e_tags, e_addedBy) {
+  return await new Promise(function(resolve, reject) {
+    let sql = "INSERT INTO Events (e_name, e_description, e_pictureLocation, e_programID, e_repeated, e_date, e_tags, e_addedBy) VALUES(?, ?, 'https://loremflickr.com/640/360', ?, ?, date('now'), ?, ?);";
+    db.all(sql, [e_name, e_description, e_programID, e_repeated, e_tags, e_addedBy], (err,rows) => {
+      if(err) {
+        console.log(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
 app.get("/test", async function(req, res) {
   // console.log(req.body['query']);
   var d = await dbq(req.body['query']);
@@ -589,6 +602,12 @@ app.put("/addProgramManager", async function(req,res) {
 });
 
 app.post("/addEvent", async function(req,res) {
+  //req.query = {"name":e_name", "des":e_description, "programID":e_programID, "repeated":e_repeated, "tags":e_tags, "addedBy":e_addedBy}
+  var d = await dbCreateEvent(req.body['name'],req.body['des'],req.body['programID'],req.body['repeated'],req.body['tags'],req.body['addedBy']
+  );
+  res.send({
+    "status": "success"
+  });
 
 });
 
