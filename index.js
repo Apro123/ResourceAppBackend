@@ -64,7 +64,7 @@ queries = [
   //9
   `
   Insert INTO Subscriptions (s_dateAdded, s_userID, s_programID, s_eventID, s_sendPushNotification)
-  VALUES (${Date.now()}, (SELECT u_id from Users where u_username = "user #11" LIMIT 1), (SELECT pr_id FROM Programs where pr_name = "program #1" LIMIT 1), NULL, 0);
+  VALUES (date('now'), (SELECT u_id from Users where u_username = "user #11" LIMIT 1), (SELECT pr_id FROM Programs where pr_name = "program #1" LIMIT 1), NULL, 0);
   `,
   //10
   `
@@ -294,7 +294,7 @@ async function dbgetSubs(userid) {
 async function dbsubProgram(programid, userid) {
   return await new Promise(function(resolve, reject) {
     let sql = `Insert INTO Subscriptions (s_dateAdded, s_userID, s_programID, s_eventID, s_sendPushNotification)
-    VALUES (${Date.now()}, (SELECT u_id from Users where u_username = ? LIMIT 1), (SELECT pr_id FROM Programs where pr_id = ? LIMIT 1), NULL, 0);
+    VALUES (date('now'), (SELECT u_id from Users where u_username = ? LIMIT 1), (SELECT pr_id FROM Programs where pr_id = ? LIMIT 1), NULL, 0);
     `;
     db.all(sql, [programid, userid], (err,rows) => {
       if(err) {
@@ -324,7 +324,7 @@ async function dbunsubProgram(programid, userid) {
 async function dbsubEvent(eventid, userid) {
   return await new Promise(function(resolve, reject) {
     let sql = `Insert INTO Subscriptions (s_dateAdded, s_userID, s_programID, s_eventID, s_sendPushNotification)
-    VALUES (${Date.now()}, (SELECT u_id from Users where u_username = ? LIMIT 1), NULL, (SELECT e_id FROM Events where e_id = ? LIMIT 1), 0);
+    VALUES (date('now'), (SELECT u_id from Users where u_username = ? LIMIT 1), NULL, (SELECT e_id FROM Events where e_id = ? LIMIT 1), 0);
     `;
     db.all(sql, [eventid, userid], (err,rows) => {
       if(err) {
